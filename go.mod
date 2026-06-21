@@ -1,4 +1,4 @@
-module getting-started-bot
+module github.com/kalulas/review-board-chatbot
 
 go 1.20
 
