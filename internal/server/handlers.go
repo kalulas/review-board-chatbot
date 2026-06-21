@@ -27,9 +27,6 @@ func handleCallback(client *seatalk.Client, pool *command.ReplyPool) gin.Handler
 			log.Printf("INFO: message received: %s, with employee_code: %s", text, req.Event.EmployeeCode)
 			pool.Remember(text)
 			reply := pool.Pick()
-			if reply == "" {
-				reply = "Hello World"
-			}
 			log.Printf("INFO: replying with: %s", reply)
 			if err := client.SendTextMessage(req.Event.EmployeeCode, reply); err != nil {
 				log.Printf("ERROR: failed to send message to user: %v", err)
