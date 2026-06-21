@@ -15,12 +15,12 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func New(cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool) *Server {
+func New(addr string, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool) *Server {
 	r := gin.Default()
 	registerRoutes(r, cfg, client, pool)
 	return &Server{
 		httpServer: &http.Server{
-			Addr:    ":" + cfg.Port,
+			Addr:    addr,
 			Handler: r,
 		},
 	}

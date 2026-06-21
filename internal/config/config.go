@@ -1,25 +1,39 @@
 package config
 
-import "os"
+import (
+	"os"
 
-// Config 的字段值来自环境变量,以免把 signing secret / app secret 写进代码库。
+	"github.com/pelletier/go-toml/v2"
+)
+
+// Config 对应一份 TOML 配置文件:集中放一处比散在一堆环境变量里改起来直观。
+// 端口不在这里——它是部署期才定的,走命令行 -p 参数。
 type Config struct {
-	Port          string
-	SigningSecret string
-	AppID         string
-	AppSecret     string
+	SeaTalk     SeaTalk     `toml:"seatalk"`
+	ReviewBoard ReviewBoard `toml:"reviewboard"`
 }
 
-// Load 读取环境变量;PORT 缺省 8080,后续可被命令行 flag 覆盖。
-func Load() *Config {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+type SeaTalk struct {
+	SigningSecret string `toml:"signing_secret"`
+	AppID         string `toml:"app_id"`
+	AppSecret     string `toml:"app_secret"`
+}
+
+type ReviewBoard struct {
+	// webhook 验签用;链路验证阶段可留空(跳过验签)。
+	WebhookSecret string `toml:"webhook_secret"`
+	// 链路验证阶段把收到的事件转发给这个 employee code;留空则只打日志。
+	TestEmployeeCode string `toml:"test_employee_code"`
+}
+
+func Load(path string) (*Config, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
 	}
-	return &Config{
-		Port:          port,
-		SigningSecret: os.Getenv("SEATALK_SIGNING_SECRET"),
-		AppID:         os.Getenv("SEATALK_APP_ID"),
-		AppSecret:     os.Getenv("SEATALK_APP_SECRET"),
+	var cfg Config
+	if err := toml.Unmarshal(data, &cfg); err != nil {
+		return nil, err
 	}
+	return &cfg, nil
 }

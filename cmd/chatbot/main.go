@@ -17,16 +17,20 @@ import (
 )
 
 func main() {
-	cfg := config.Load()
-	port := flag.String("port", cfg.Port, "HTTP listen port")
+	port := flag.String("p", "8080", "HTTP listen port")
+	configPath := flag.String("config", "config.toml", "path to TOML config file")
 	flag.Parse()
-	cfg.Port = *port
 
-	client := seatalk.NewClient(cfg.AppID, cfg.AppSecret)
+	cfg, err := config.Load(*configPath)
+	if err != nil {
+		log.Fatalf("failed to load config %s: %v", *configPath, err)
+	}
+
+	client := seatalk.NewClient(cfg.SeaTalk.AppID, cfg.SeaTalk.AppSecret)
 	pool := command.NewReplyPool()
-	srv := server.New(cfg, client, pool)
 
-	addr := ":" + cfg.Port
+	addr := ":" + *port
+	srv := server.New(addr, cfg, client, pool)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT)
