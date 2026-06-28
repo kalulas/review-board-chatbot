@@ -20,10 +20,10 @@ type SeaTalk struct {
 }
 
 type ReviewBoard struct {
-	// webhook 验签用;链路验证阶段可留空(跳过验签)。
+	// webhook 验签用;留空则跳过验签。
 	WebhookSecret string `toml:"webhook_secret"`
-	// 链路验证阶段把收到的事件转发给这个 employee code;留空则只打日志。
-	TestEmployeeCode string `toml:"test_employee_code"`
+	// 把 RB username 拼成 email 的域名后缀;进内网后可改。
+	EmailDomain string `toml:"email_domain"`
 }
 
 func Load(path string) (*Config, error) {

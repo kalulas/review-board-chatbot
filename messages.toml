@@ -1,0 +1,83 @@
+# Review Board 通知消息模板
+
+[settings]
+image_placeholder   = "[图片]"
+comment_max_len     = 150
+reply_quote_max_len = 20
+
+[close_type_labels]
+submitted = "完成"
+discarded = "废弃"
+
+[templates]
+
+# #1 新建 request,或给已有 request 新增 reviewer —— 通知(新)reviewer
+request_published_new = '''
+**{owner}** 发布了新的 review 请求 #{rr_id}
+
+**标题：**{rr_summary}
+
+{rr_url}
+'''
+
+# #4 republish 更新 —— 通知当前 reviewer
+request_published_update = '''
+**{owner}** 更新了已发布 review 请求 #{rr_id} 的内容
+
+**标题：**{rr_summary}
+
+{rr_url}
+'''
+
+# #2 评论(提出 review 意见)—— 通知 owner
+review_comment = '''
+**{user}** 在你发布的 review 请求 #{rr_id} 下发表评论
+
+**原请求标题：**{rr_summary}
+
+**评论：**{comment}
+
+{review_url}
+'''
+
+# #6 Ship It! —— 通知 owner
+ship_it = '''
+**{user}** 给你发布的 review 请求 #{rr_id} 点了 **"Ship It!"**
+
+**原请求标题：**{rr_summary}
+
+{rr_url}
+'''
+
+# #5 关闭 request —— 通知当前 reviewer
+request_closed = '''
+**{closed_by}** 已将 review 请求 #{rr_id} 标记为 「**{close_type}**」
+
+**标题：**{rr_summary}
+
+{rr_url}
+'''
+
+# #3 回复评论 —— 通知 owner(TODO: 进内网后改为通知原评论者)
+reply = '''
+**{user}** 在你发布的 review 请求 #{rr_id} 下做出回复
+
+**原请求标题：**{rr_summary}
+
+**原评论：**{quote}
+
+**回复：**{comment}
+
+{reply_url}
+'''
+
+# #3 对整条 review 的回复(无具体被回复评论)—— 通知 owner
+reply_to_review = '''
+**{user}** 在你发布的 review 请求 #{rr_id} 下做出回复
+
+**原请求标题：**{rr_summary}
+
+**回复：**{comment}
+
+{reply_url}
+'''

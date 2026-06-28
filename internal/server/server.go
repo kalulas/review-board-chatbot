@@ -8,6 +8,7 @@ import (
 
 	"github.com/kalulas/review-board-chatbot/internal/command"
 	"github.com/kalulas/review-board-chatbot/internal/config"
+	"github.com/kalulas/review-board-chatbot/internal/notify"
 	"github.com/kalulas/review-board-chatbot/internal/seatalk"
 )
 
@@ -15,9 +16,9 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func New(addr string, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool) *Server {
+func New(addr string, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool, notifier *notify.Notifier) *Server {
 	r := gin.Default()
-	registerRoutes(r, cfg, client, pool)
+	registerRoutes(r, cfg, client, pool, notifier)
 	return &Server{
 		httpServer: &http.Server{
 			Addr:    addr,

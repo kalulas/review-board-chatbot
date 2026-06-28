@@ -7,10 +7,11 @@ import (
 
 	"github.com/kalulas/review-board-chatbot/internal/command"
 	"github.com/kalulas/review-board-chatbot/internal/config"
+	"github.com/kalulas/review-board-chatbot/internal/notify"
 	"github.com/kalulas/review-board-chatbot/internal/seatalk"
 )
 
-func registerRoutes(r *gin.Engine, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool) {
+func registerRoutes(r *gin.Engine, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool, notifier *notify.Notifier) {
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
@@ -21,5 +22,5 @@ func registerRoutes(r *gin.Engine, cfg *config.Config, client *seatalk.Client, p
 	callback.POST("", handleCallback(client, pool))
 
 	// Review Board webhook;验签(HMAC-SHA1)在 handler 内做,方案和 SeaTalk 不同。
-	r.POST("/webhook/reviewboard", handleReviewBoardWebhook(cfg, client))
+	r.POST("/webhook/reviewboard", handleReviewBoardWebhook(cfg, notifier))
 }

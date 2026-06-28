@@ -97,6 +97,15 @@ type sendResp struct {
 }
 
 func (c *Client) SendTextMessage(employeeCode, content string) error {
+	return c.sendMessage(employeeCode, content, 2) // 2 = 纯文本
+}
+
+// SendMarkdownMessage 以 markdown 格式发送(format 1),用于需要加粗/链接的通知。
+func (c *Client) SendMarkdownMessage(employeeCode, content string) error {
+	return c.sendMessage(employeeCode, content, 1)
+}
+
+func (c *Client) sendMessage(employeeCode, content string, format int8) error {
 	token, err := c.accessToken()
 	if err != nil {
 		return err
@@ -106,7 +115,7 @@ func (c *Client) SendTextMessage(employeeCode, content string) error {
 		EmployeeCode: employeeCode,
 		Message: messageBody{
 			Tag:  "text",
-			Text: textBody{Format: 2, Content: content}, // format 2 表示纯文本
+			Text: textBody{Format: format, Content: content},
 		},
 	})
 	if err != nil {

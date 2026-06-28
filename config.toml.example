@@ -4,7 +4,7 @@ app_id = ""
 app_secret = ""
 
 [reviewboard]
-# webhook 验签 secret;留空则跳过验签(仅限链路验证阶段)。
+# webhook 验签 secret;留空则跳过验签。
 webhook_secret = ""
-# 链路验证阶段把事件转发给这个 employee code;留空则只打日志。
-test_employee_code = ""
+# RB username 拼成 email 的域名后缀
+email_domain = ""
