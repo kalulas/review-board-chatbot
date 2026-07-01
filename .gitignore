@@ -7,3 +7,6 @@
 
 # scripts
 launch.sh
+
+# artifacts (logs)
+output.log

@@ -12,7 +12,7 @@ import (
 
 	"github.com/kalulas/review-board-chatbot/internal/command"
 	"github.com/kalulas/review-board-chatbot/internal/config"
-	"github.com/kalulas/review-board-chatbot/internal/directory"
+	"github.com/kalulas/review-board-chatbot/internal/employees"
 	"github.com/kalulas/review-board-chatbot/internal/message"
 	"github.com/kalulas/review-board-chatbot/internal/notify"
 	"github.com/kalulas/review-board-chatbot/internal/seatalk"
@@ -35,7 +35,7 @@ func main() {
 	}
 
 	client := seatalk.NewClient(cfg.SeaTalk.AppID, cfg.SeaTalk.AppSecret)
-	resolver := directory.New(client, cfg.ReviewBoard.EmailDomain)
+	resolver := employees.New(client, cfg.ReviewBoard.EmailDomain)
 	notifier := notify.New(client, resolver, msgs)
 	pool := command.NewReplyPool()
 

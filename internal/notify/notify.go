@@ -4,7 +4,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/kalulas/review-board-chatbot/internal/directory"
+	"github.com/kalulas/review-board-chatbot/internal/employees"
 	"github.com/kalulas/review-board-chatbot/internal/message"
 	"github.com/kalulas/review-board-chatbot/internal/reviewboard"
 	"github.com/kalulas/review-board-chatbot/internal/seatalk"
@@ -13,11 +13,11 @@ import (
 // Notifier 把 Review Board 事件转成 SeaTalk 定向通知。
 type Notifier struct {
 	client   *seatalk.Client
-	resolver *directory.Resolver
+	resolver *employees.Resolver
 	msgs     *message.Messages
 }
 
-func New(client *seatalk.Client, resolver *directory.Resolver, msgs *message.Messages) *Notifier {
+func New(client *seatalk.Client, resolver *employees.Resolver, msgs *message.Messages) *Notifier {
 	return &Notifier{client: client, resolver: resolver, msgs: msgs}
 }
 
