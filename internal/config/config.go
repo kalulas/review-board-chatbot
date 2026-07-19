@@ -14,10 +14,9 @@ type Config struct {
 }
 
 type SeaTalk struct {
-	SigningSecret string `toml:"signing_secret"`
-	AppID         string `toml:"app_id"`
-	AppSecret     string `toml:"app_secret"`
-	LogPayload    bool   `toml:"log_seatalk_payload"`
+	AppID      string `toml:"app_id"`
+	AppSecret  string `toml:"app_secret"`
+	LogPayload bool   `toml:"log_seatalk_payload"`
 }
 
 type ReviewBoard struct {

@@ -41,10 +41,11 @@ func main() {
 	pool := command.NewReplyPool()
 
 	addr := ":" + *port
-	srv := server.New(addr, cfg, client, pool, notifier)
+	srv := server.New(addr, cfg, notifier)
 	wsConsumer := seatalkws.New(cfg.SeaTalk.AppID, cfg.SeaTalk.AppSecret, client, pool, cfg.SeaTalk.LogPayload)
 
-	// 当前过渡版本，让 HTTP server 和 WebSocket 同时工作，一起终止
+	// 两条通道长期并存：Review Board 的 webhook -> HTTP server，SeaTalk 事件 -> WebSocket。
+	// 共用一个信号 ctx，收到退出信号时二者一起退出。
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGQUIT)
 	defer stop()
 

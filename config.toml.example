@@ -1,5 +1,4 @@
 [seatalk]
-signing_secret = ""
 app_id = ""
 app_secret = ""
 log_seatalk_payload = false

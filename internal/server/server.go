@@ -6,19 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/kalulas/review-board-chatbot/internal/command"
 	"github.com/kalulas/review-board-chatbot/internal/config"
 	"github.com/kalulas/review-board-chatbot/internal/notify"
-	"github.com/kalulas/review-board-chatbot/internal/seatalk"
 )
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func New(addr string, cfg *config.Config, client *seatalk.Client, pool *command.ReplyPool, notifier *notify.Notifier) *Server {
+func New(addr string, cfg *config.Config, notifier *notify.Notifier) *Server {
 	r := gin.Default()
-	registerRoutes(r, cfg, client, pool, notifier)
+	registerRoutes(r, cfg, notifier)
 	return &Server{
 		httpServer: &http.Server{
 			Addr:    addr,
