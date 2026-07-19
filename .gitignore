@@ -4,6 +4,7 @@
 # secrets / runtime env (never commit)
 .env
 /config.toml
+/messages.toml
 
 # scripts
 launch.sh

@@ -1,0 +1,53 @@
+# Review Board 通知消息模板。复制为 messages.toml 后填写。
+# 模板里的 {xxx} 会被替换成对应内容，以 markdown 发送。
+# 公共占位符（所有模板可用）：{owner} {rr_id} {rr_summary} {rr_url}
+
+[settings]
+# 评论里的图片 markdown 会被替换成这个占位符
+image_placeholder   = ""
+# 评论摘要截断长度（按字符数）
+comment_max_len     = 150
+# 回复模板里“原评论”的截断长度
+reply_quote_max_len = 20
+
+# close_type 的显示文案，键为 Review Board 的原始值
+[close_type_labels]
+submitted = ""
+discarded = ""
+
+[templates]
+
+# 新建 request，或给已有 request 新增 reviewer —— 通知（新）reviewer
+# 可用：公共占位符
+request_published_new = '''
+'''
+
+# republish 更新 —— 通知当前 reviewer
+# 可用：公共占位符
+request_published_update = '''
+'''
+
+# 评论（提出 review 意见）—— 通知 owner
+# 可用：公共占位符、{user} 评论者、{comment} 评论摘要、{review_url} 定位到该评论的链接
+review_comment = '''
+'''
+
+# Ship It! —— 通知 owner
+# 可用：公共占位符、{user} 点 Ship It 的人
+ship_it = '''
+'''
+
+# 关闭 request —— 通知当前 reviewer
+# 可用：公共占位符、{closed_by} 关闭者、{close_type} 上面配的显示文案
+request_closed = '''
+'''
+
+# 回复某条具体评论 —— 通知 owner
+# 可用：公共占位符、{user} 回复者、{quote} 被回复的原评论摘要、{comment} 回复内容、{reply_url} 定位链接
+reply = '''
+'''
+
+# 回复整条 review（没有具体被回复的评论）—— 通知 owner
+# 可用：公共占位符、{user} 回复者、{comment} 回复内容、{reply_url} 定位链接
+reply_to_review = '''
+'''
