@@ -8,3 +8,5 @@ app_secret = ""
 webhook_secret = ""
 # RB username 拼成 email 的域名后缀
 email_domain = ""
+# 是否打印收到的 webhook payload
+log_payload = false

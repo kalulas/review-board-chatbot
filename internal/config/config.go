@@ -24,6 +24,8 @@ type ReviewBoard struct {
 	WebhookSecret string `toml:"webhook_secret"`
 	// 把 RB username 拼成 email 的域名后缀;进内网后可改。
 	EmailDomain string `toml:"email_domain"`
+	// 是否打印收到的 webhook payload
+	LogPayload bool `toml:"log_payload"`
 }
 
 func Load(path string) (*Config, error) {

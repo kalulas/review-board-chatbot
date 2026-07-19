@@ -1,6 +1,8 @@
 package server
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -28,10 +30,15 @@ func handleReviewBoardWebhook(cfg *config.Config, notifier *notify.Notifier) gin
 				return
 			}
 		} else {
-			log.Printf("WARN: REVIEWBOARD_WEBHOOK_SECRET 未配置,跳过验签")
+			log.Printf("WARN: reviewboard webhook_secret not configured, skipping signature verification")
 		}
 
 		event := c.GetHeader("X-ReviewBoard-Event")
+
+		if cfg.ReviewBoard.LogPayload {
+			logReviewBoardPayload(event, body)
+		}
+
 		payload, err := reviewboard.Parse(body)
 		if err != nil {
 			// 仍回 200,避免 RB 因非 2xx 重投;解析失败记日志即可。
@@ -46,4 +53,18 @@ func handleReviewBoardWebhook(cfg *config.Config, notifier *notify.Notifier) gin
 
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	}
+}
+
+func logReviewBoardPayload(event string, body []byte) {
+	var v interface{}
+	if err := json.Unmarshal(body, &v); err != nil {
+		log.Printf("DEBUG: reviewboard payload event=%s (raw, unparseable): %s", event, string(body))
+		return
+	}
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	_ = enc.Encode(v)
+	log.Printf("DEBUG: reviewboard payload event=%s:\n%s", event, buf.String())
 }
