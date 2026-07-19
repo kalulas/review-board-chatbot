@@ -2,6 +2,7 @@
 signing_secret = ""
 app_id = ""
 app_secret = ""
+log_seatalk_payload = false
 
 [reviewboard]
 # webhook 验签 secret;留空则跳过验签。
@@ -9,4 +10,4 @@ webhook_secret = ""
 # RB username 拼成 email 的域名后缀
 email_domain = ""
 # 是否打印收到的 webhook payload
-log_payload = false
+log_review_board_payload = false

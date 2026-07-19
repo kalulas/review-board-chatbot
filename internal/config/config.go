@@ -17,6 +17,7 @@ type SeaTalk struct {
 	SigningSecret string `toml:"signing_secret"`
 	AppID         string `toml:"app_id"`
 	AppSecret     string `toml:"app_secret"`
+	LogPayload    bool   `toml:"log_seatalk_payload"`
 }
 
 type ReviewBoard struct {
@@ -25,7 +26,7 @@ type ReviewBoard struct {
 	// 把 RB username 拼成 email 的域名后缀;进内网后可改。
 	EmailDomain string `toml:"email_domain"`
 	// 是否打印收到的 webhook payload
-	LogPayload bool `toml:"log_payload"`
+	LogPayload bool `toml:"log_review_board_payload"`
 }
 
 func Load(path string) (*Config, error) {

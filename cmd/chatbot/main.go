@@ -16,6 +16,7 @@ import (
 	"github.com/kalulas/review-board-chatbot/internal/message"
 	"github.com/kalulas/review-board-chatbot/internal/notify"
 	"github.com/kalulas/review-board-chatbot/internal/seatalk"
+	"github.com/kalulas/review-board-chatbot/internal/seatalkws"
 	"github.com/kalulas/review-board-chatbot/internal/server"
 )
 
@@ -41,9 +42,11 @@ func main() {
 
 	addr := ":" + *port
 	srv := server.New(addr, cfg, client, pool, notifier)
+	wsConsumer := seatalkws.New(cfg.SeaTalk.AppID, cfg.SeaTalk.AppSecret, client, pool, cfg.SeaTalk.LogPayload)
 
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT)
+	// 当前过渡版本，让 HTTP server 和 WebSocket 同时工作，一起终止
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGQUIT)
+	defer stop()
 
 	go func() {
 		log.Println("starting web, listening on", addr)
@@ -52,13 +55,15 @@ func main() {
 		}
 	}()
 
-	<-c
+	go wsConsumer.Run(ctx)
+
+	<-ctx.Done()
 	log.Println("terminate service")
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	log.Println("shutting down web on", addr)
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Fatalln("failed shutdown server", err)
 	}
 	log.Println("web gracefully stopped")
